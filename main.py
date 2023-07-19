@@ -3,8 +3,9 @@ from fastapi import FastAPI
 from starlette_graphene3 import *
 from app.db.database import prepare_database, Session
 from app.gql.querys import Query
-from app.db.models import Employer, Job
+from app.db.models import Employer, Job, JobApplication
 from app.gql.mutations import Mutation
+
 
 schema = Schema(query=Query, mutation=Mutation)
 
@@ -20,6 +21,12 @@ def startup_event():
 def get_employers():
     with Session() as session:
         return session.query(Employer).all()
+
+
+@app.get("/apps")
+def get_applications():
+    with Session() as session:
+        return session.query(JobApplication).count()
 
 
 @app.get("/jobs")
